@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Universal Time Portal</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(-45deg, #1f1c2c, #928dab, #0f2027, #203a43);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.container {
+    width: 95%;
+    max-width: 1100px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.6);
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    transition: 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+}
+
+.time {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.date {
+    margin-top: 15px;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+footer {
+    margin-top: 40px;
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌍 Universal Calendar Dashboard</h1>
+
+    <div class="cards">
+
+        <!-- Gregorian -->
+        <div class="card">
+            <h2>📅 Gregorian Calendar</h2>
+            <div id="gregorianTime" class="time"></div>
+            <div id="gregorianDate" class="date"></div>
+        </div>
+
+        <!-- Islamic -->
+        <div class="card">
+            <h2>🌙 Islamic (Hijri)</h2>
+            <div id="hijriTime" class="time"></div>
+            <div id="hijriDate" class="date"></div>
+        </div>
+
+        <!-- Solar -->
+        <div class="card">
+            <h2>☀ Solar System Time</h2>
+            <div id="solarTime" class="time"></div>
+            <div id="solarInfo" class="date"></div>
+        </div>
+
+    </div>
+
+    <footer>
+        Live Dynamic Time Portal ✨
+    </footer>
+
+</div>
+
+<script>
+
+function updateTime() {
+
+    const now = new Date();
+
+    // Live Time
+    const timeString = now.toLocaleTimeString();
+
+    // Gregorian
+    document.getElementById("gregorianTime").innerHTML = timeString;
+    document.getElementById("gregorianDate").innerHTML = now.toDateString();
+
+    // Hijri
+    const hijriFormatter = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+
+    document.getElementById("hijriTime").innerHTML = timeString;
+    document.getElementById("hijriDate").innerHTML = hijriFormatter.format(now);
+
+    // Solar System (Day of Year + Earth rotation info)
+    const start = new Date(now.getFullYear(), 0, 0);
+    const diff = now - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    const dayOfYear = Math.floor(diff / oneDay);
+
+    document.getElementById("solarTime").innerHTML = timeString;
+    document.getElementById("solarInfo").innerHTML =
+        "Day of Year: " + dayOfYear +
+        "<br>Earth Rotation: 24h Cycle";
+
+}
+
+updateTime();
+setInterval(updateTime, 1000);
+
+</script>
+
+</body>
+</html>
